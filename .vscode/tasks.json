@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build esm",
+            "type": "shell",
+            "command": "npx tsc -m esnext -t esnext -d true src/index.ts; mv src/index.js src/miniquery.esm.js; mv src/index.d.ts src/miniquery.esm.d.ts",
+            "group": "build"
+        },
+        {
+            "label": "build umd",
+            "type": "shell",
+            "command": "npx tsc -m umd -t esnext -d true src/index.ts; mv src/index.js src/miniquery.js; mv src/index.d.ts src/miniquery.d.ts",
+            "group": "build"
+        }
+    ]
+}
