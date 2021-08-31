@@ -1,0 +1,12 @@
+# IDE files
+.vscode/
+
+# installed dependencies, duh
+node_modules/
+
+# unit testing, irrelevant for production
+test/
+
+# build configs, irrelevant for production
+.browserslistrc
+webpack.config.js
