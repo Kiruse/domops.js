@@ -7,22 +7,22 @@ const path   = require('path');
 const puppeteer = require('puppeteer');
 const pathPages = path.resolve(__dirname, 'pages');
 
-describe('miniquery', () => {
+describe('domops', () => {
     it('should query DOM', async () => {
         const page = await open('file:' + path.resolve(pathPages, 'query.html'));
         
-        const h1 = await page.evaluate(() => miniquery('#header h1').text()[0]);
+        const h1 = await page.evaluate(() => domops('#header h1').text()[0]);
         assert.strictEqual(h1, 'Welcome');
         
-        const spans = await page.evaluate(() => miniquery('#wrapper .box span').text());
+        const spans = await page.evaluate(() => domops('#wrapper .box span').text());
         assert.strictEqual(spans[0], 'revolutionary');
         assert.strictEqual(spans[1], 'amazing');
         
-        const imgurl = await page.evaluate(() => miniquery('#wrapper .box img').attr('src')[0]);
+        const imgurl = await page.evaluate(() => domops('#wrapper .box img').attr('src')[0]);
         assert.strictEqual(imgurl, '/assets/img/some_image.jpg');
         
         const form = await page.evaluate(() => {
-            const $form = miniquery('form');
+            const $form = domops('form');
             return {
                 action:  $form.attr('action')[0],
                 name:    $form.query('input[name=name]')[0].value,
@@ -45,7 +45,7 @@ async function open(url) {
     const browser = await puppeteer.launch();
     const page = await browser.defaultBrowserContext().newPage();
     await page.goto(url);
-    await page.addScriptTag({path: path.resolve(__dirname, '../src/miniquery.js')});
+    await page.addScriptTag({path: path.resolve(__dirname, '../src/domops.js')});
     // auto-close after 10 seconds - does not prevent script from terminating
     setTimeout(() => {
         browser.close();

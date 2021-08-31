@@ -1,5 +1,5 @@
 {
-  "name": "miniquery",
+  "name": "domops",
   "version": "0.1.0",
   "description": "A minimalist's interpretation of jQuery for DOM traversal & manipulation only.",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Kiruse/miniquery.js.git"
+    "url": "git+https://github.com/Kiruse/domops.js.git"
   },
   "keywords": [
     "jquery",
@@ -19,9 +19,9 @@
   "author": "Kiruse",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Kiruse/miniquery.js/issues"
+    "url": "https://github.com/Kiruse/domops.js/issues"
   },
-  "homepage": "https://github.com/Kiruse/miniquery.js#readme",
+  "homepage": "https://github.com/Kiruse/domops.js#readme",
   "devDependencies": {
     "mocha": "^9.1.1",
     "puppeteer": "^10.2.0",

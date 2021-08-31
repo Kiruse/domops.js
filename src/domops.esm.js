@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 // A minimalist's interpretation of jQuery for DOM traversal & manipulation.
 // -----
-// Copyright (c) Kiruse 2021. Licensed under GPL-3.0
+// Copyright (c) Kiruse 2021. Licensed under MIT License
 "use strict";
 export default function $(...args) { return new DocQuery(...args); }
 let docready = false;
