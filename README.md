@@ -1,7 +1,7 @@
-# miniquery.js
+# domops.js
 A minimalist's interpretation of jQuery for DOM traversal &amp; manipulation.
 
-- [miniquery.js](#miniqueryjs)
+- [domops.js](#domopsjs)
 - [setup](#setup)
 - [embedding](#embedding)
 - [usage](#usage)
@@ -10,32 +10,32 @@ A minimalist's interpretation of jQuery for DOM traversal &amp; manipulation.
 
 # setup
 
-There's different ways to acquire a copy of miniquery:
+There's different ways to acquire a copy of domops:
 
-* via NPM: `npm i --save miniquery`
+* via NPM: `npm i --save domops`
 * via Releases
 
-Currently, miniquery is not deployed to any CDN.
+Currently, domops is not deployed to any CDN.
 
 
 # embedding
 
-**miniquery** requires a DOM and can thus only be used in a browser-like environment, such as [Electron](https://www.electronjs.org/) or an actual browser.
+**domops** requires a DOM and can thus only be used in a browser-like environment, such as [Electron](https://www.electronjs.org/) or an actual browser.
 
 In the browser, one may include it as such:
 
 ```html
 <!-- UMD -->
-<script src="<path_to_miniquery>/miniuqery.js"></script>
+<script src="<path_to_domops>/miniuqery.js"></script>
 <script>
     "use strict";
-    const $ = miniquery;
+    const $ = domops;
     // ...
 </script>
 
 <!-- ESModules -->
 <script type="module">
-    import $ from './path_to/miniquery.esm.js';
+    import $ from './path_to/domops.esm.js';
     // ...
 </script>
 ```
@@ -44,10 +44,10 @@ Personally, I prefer packaging it with [Webpack](https://webpack.js.org) or othe
 
 ```javascript
 // using ESModules
-import miniquery from 'miniquery';
+import domops from 'domops';
 
 // using CommonJS
-const miniquery = require('miniquery');
+const domops = require('domops');
 ```
 
 And the bundler will handle the rest.
@@ -58,7 +58,7 @@ And the bundler will handle the rest.
 *TODO*
 
 ## web scraping with puppeteer
-Unfortunately, miniquery requires a DOM. You may use it with [node-dom](https://www.npmjs.com/package/node-dom), or with the more popular [Puppeteer](https://github.com/puppeteer/puppeteer/). While the former is suited for an assortment of tasks, *Puppeteer* is certainly more thoroughly tested and will be able to handle any task that its associated Chrome version can - albeit at the cost of increased complexity. *miniquery*'s unit tests are written with *Puppeteer*.
+Unfortunately, domops requires a DOM. You may use it with [node-dom](https://www.npmjs.com/package/node-dom), or with the more popular [Puppeteer](https://github.com/puppeteer/puppeteer/). While the former is suited for an assortment of tasks, *Puppeteer* is certainly more thoroughly tested and will be able to handle any task that its associated Chrome version can - albeit at the cost of increased complexity. *domops*'s unit tests are written with *Puppeteer*.
 
 **Example**
 In node:
@@ -73,13 +73,13 @@ const puppeteer = require('puppeteer');
     // load web page by URL - include protocol
     await page.goto('https://google.com');
     
-    // inject miniquery library via URL or local file path
-    await page.addScriptTag({url: '<url_to_miniquery>'});
-    await page.addScriptTag({path: './node_modules/miniquery/miniquery.js'});
+    // inject domops library via URL or local file path
+    await page.addScriptTag({url: '<url_to_domops>'});
+    await page.addScriptTag({path: './node_modules/domops/domops.js'});
     
     const logosize = await page.evaluate(() => {
         // execute web scraping code in the context of the browser page
-        const $logo = miniquery('#hplogo');
+        const $logo = domops('#hplogo');
         return {
             width:  parseFloat($logo.style('width')[0]),
             height: parseFloat($logo.style('height')[0]),

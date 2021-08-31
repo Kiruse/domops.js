@@ -6,13 +6,13 @@ const path = require('path');
 
 module.exports = {
     mode: 'production',
-    entry: './src/miniquery.esm.js',
+    entry: './src/domops.esm.js',
     output: {
         path: path.resolve(__dirname, 'src'),
-        filename: 'miniquery.js',
+        filename: 'domops.js',
         library: {
             type: 'var',
-            name: 'miniquery',
+            name: 'domops',
             export: 'default',
         }
     },

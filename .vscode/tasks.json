@@ -4,7 +4,7 @@
         {
             "label": "build esm",
             "type": "shell",
-            "command": "npx tsc -m esnext -t esnext -d true src/index.ts; mv src/index.js src/miniquery.esm.js; mv src/index.d.ts src/miniquery.esm.d.ts",
+            "command": "npx tsc -m esnext -t esnext -d true src/index.ts; mv src/index.js src/domops.esm.js; mv src/index.d.ts src/domops.esm.d.ts",
             "group": "build"
         },
         {
