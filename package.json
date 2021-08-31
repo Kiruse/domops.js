@@ -1,5 +1,5 @@
 {
-  "name": "domops",
+  "name": "@kiruse/domops",
   "version": "0.1.0",
   "description": "A minimalist's interpretation of jQuery for DOM traversal & manipulation only.",
   "main": "index.js",
