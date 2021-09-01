@@ -278,6 +278,15 @@ export class DocQuery {
     }
     
     /**
+     * Transform each element in the current selection and return the new selection.
+     * @param cb transformer to apply
+     * @returns new selection of transformed elements
+     */
+    map(cb: (el: HTMLElement, idx: number, ary: HTMLElement[]) => HTMLElement): DocQuery {
+        return new DocQuery(...this.elements.map(cb));
+    }
+    
+    /**
      * Attach every element in the current selection to the given parent element.
      * @param parent parent element to attach to
      * @returns this selection
