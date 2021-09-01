@@ -202,6 +202,22 @@ export class DocQuery {
         }
     }
     
+    value(): string[];
+    value(val: string): DocQuery;
+    value(cb: (el: HTMLElement, i: number, ary: HTMLElement[]) => string): DocQuery;
+    value(val?): string[]|DocQuery {
+        if (val === undefined) {
+            return this.elements.map(el => (el as HTMLInputElement).value);
+        }
+        else {
+            this.elements.forEach((el, i, ary) => {
+                const input = el as HTMLInputElement;
+                input.value = typeof(val) === 'function' ? val(el, i, ary) : val;
+            });
+            return this;
+        }
+    }
+    
     style(name: string): string[];
     style(name: string, value: any): DocQuery;
     style(styles: Object): DocQuery;
@@ -302,6 +318,21 @@ export class DocQuery {
             el.parentElement.removeChild(el);
         }
         return this;
+    }
+    
+    /**
+     * Gets the parent element of every element in the current selection.
+     * If multiple elements share a parent, that parent is added only once.
+     * @returns new selection of parent elements
+     */
+    parent(): DocQuery {
+        const parents = [];
+        for (let elem of this.elements) {
+            if (parents.indexOf(elem.parentElement) === -1) {
+                parents.push(elem.parentElement);
+            }
+        }
+        return new DocQuery(...parents);
     }
     
     /**
