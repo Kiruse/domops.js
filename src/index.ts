@@ -306,12 +306,15 @@ export class DocQuery {
      * @param children to attach
      * @return this selection
      */
-    attach(...children: HTMLElement[]): DocQuery {
+    attach(...children: (HTMLElement|string)[]): DocQuery {
         if (this.elements.length === 0) {
-            children.forEach(child => child.parentElement.removeChild(child));
+            children.forEach(child => {
+                if (typeof child === 'object')
+                    child.parentElement.removeChild(child)
+            });
         }
         else {
-            children.forEach(child => this.elements[0].appendChild(child));
+            children.forEach(child => this.elements[0].appendChild(typeof child === 'string' ? document.createTextNode(child) : child));
         }
         return this;
     }
