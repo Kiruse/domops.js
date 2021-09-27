@@ -2,24 +2,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build index.js",
+            "label": "build",
             "type": "shell",
-            "command": "npx tsc -m commonjs -t esnext -d true src/index.ts",
-            "group": "build"
-        },
-        {
-            "label": "build esm",
-            "type": "shell",
-            "command": "npx tsc -m esnext -t esnext -d true src/index.ts; mv src/index.js src/domops.esm.js -f; mv src/index.d.ts src/domops.esm.d.ts -f",
-            "windows": {
-                "command": "npx tsc -m esnext -t esnext -d true src/index.ts; mv src/index.js src/domops.esm.js -Force; mv src/index.d.ts src/domops.esm.d.ts -Force"
-            },
-            "group": "build"
-        },
-        {
-            "label": "build web",
-            "type": "shell",
-            "command": "npx webpack",
+            "command": "node build.js",
             "group": "build"
         }
     ]
