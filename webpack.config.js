@@ -6,9 +6,9 @@ const path = require('path');
 
 module.exports = {
     mode: 'production',
-    entry: './src/domops.esm.js',
+    entry: './dist/domops.esm.js',
     output: {
-        path: path.resolve(__dirname, 'src'),
+        path: path.resolve(__dirname, 'dist'),
         filename: 'domops.js',
         library: {
             type: 'var',
