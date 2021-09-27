@@ -84,8 +84,8 @@ export declare class DocQuery {
      *
      * @returns Array of 4-tuples [[left, top, right, bottom]]
      */
-    box({ absolute }: {
-        absolute: boolean;
+    box({ absolute }?: {
+        absolute?: boolean;
     }): [number, number, number, number][];
     /**
      * Get the offsets of each element relative to their individual offset parents as CSS-compatible objects array.
