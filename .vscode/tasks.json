@@ -10,7 +10,10 @@
         {
             "label": "build esm",
             "type": "shell",
-            "command": "npx tsc -m esnext -t esnext -d true src/index.ts; mv src/index.js src/domops.esm.js; mv src/index.d.ts src/domops.esm.d.ts",
+            "command": "npx tsc -m esnext -t esnext -d true src/index.ts; mv src/index.js src/domops.esm.js -f; mv src/index.d.ts src/domops.esm.d.ts -f",
+            "windows": {
+                "command": "npx tsc -m esnext -t esnext -d true src/index.ts; mv src/index.js src/domops.esm.js -Force; mv src/index.d.ts src/domops.esm.d.ts -Force"
+            },
             "group": "build"
         },
         {
