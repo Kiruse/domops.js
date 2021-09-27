@@ -269,7 +269,7 @@ export class DocQuery {
      * 
      * @returns Array of 4-tuples [[left, top, right, bottom]]
      */
-    box({absolute}: {absolute?: boolean}): [number, number, number, number][] {
+    box({absolute}: {absolute?: boolean} = {}): [number, number, number, number][] {
         return this.elements.map(el => {
             const [x, y] = absolute ? this._elementLocation(el) : [el.offsetLeft, el.offsetTop];
             const [w, h] = [el.offsetWidth, el.offsetHeight];
