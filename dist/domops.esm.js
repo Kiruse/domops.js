@@ -158,6 +158,18 @@ export class DocQuery {
             return this;
         }
     }
+    value(val) {
+        if (val === undefined) {
+            return this.elements.map(el => el.value);
+        }
+        else {
+            this.elements.forEach((el, i, ary) => {
+                const input = el;
+                input.value = typeof (val) === 'function' ? val(el, i, ary) : val;
+            });
+            return this;
+        }
+    }
     style(...args) {
         if (args.length === 0)
             throw new ArgumentError('no arguments');
@@ -170,6 +182,68 @@ export class DocQuery {
         else {
             return this._style_set(args[0], args[1]);
         }
+    }
+    /**
+     * Get the absolute location on the page of each element in the current selection.
+     * @returns Array of 2-tuples [[x, y]]
+     */
+    location() {
+        return this.elements.map(this._elementLocation.bind(this));
+    }
+    _elementLocation(el) {
+        const result = [0, 0];
+        while (el) {
+            result[0] += el.offsetLeft;
+            result[1] += el.offsetTop;
+            el = el.offsetParent;
+        }
+        return result;
+    }
+    /**
+     * Get the absolute size of each element in the current selection.
+     * @returns Array of 2-tuples [[x, y]]
+     */
+    size() {
+        return this.elements.map(el => [el.offsetWidth, el.offsetHeight]);
+    }
+    /**
+     * Get the offsets of each element relative to their individual offset parents.
+     * The offset parent is the first ancestor element with CSS display set to anything but 'static'. In other words,
+     * it's the element considered as the anchor point by CSS.
+     *
+     * `right` and `bottom` are regular distances, i.e. distance from anchor parent's left border to element's right
+     * border respectively.
+     *
+     * @returns Array of 4-tuples [[left, top, right, bottom]]
+     */
+    box({ absolute }) {
+        return this.elements.map(el => {
+            const [x, y] = absolute ? this._elementLocation(el) : [el.offsetLeft, el.offsetTop];
+            const [w, h] = [el.offsetWidth, el.offsetHeight];
+            return [x, y, x + w, y + h];
+        });
+    }
+    /**
+     * Get the offsets of each element relative to their individual offset parents as CSS-compatible objects array.
+     *
+     * Unlike {@see box}, `right` and `bottom` properties are reversed distances, i.e. distance from anchor parent's
+     * right border to element's own right border respectively.
+     *
+     * @returns Array of CSS location objects [{top, left, right, bottom}]
+     */
+    cssBox() {
+        return this.elements.map(el => {
+            const parent = el.offsetParent ?? document.body;
+            const [pw, ph] = [parent.offsetWidth, parent.offsetHeight];
+            const [x, y] = [el.offsetLeft, el.offsetTop];
+            const [w, h] = [el.offsetWidth, el.offsetHeight];
+            return {
+                top: y,
+                left: x,
+                right: pw - (x + w),
+                bottom: ph - (y + h),
+            };
+        });
     }
     _style_get(name) {
         return this.elements.map(e => getComputedStyle(e)[name]);
@@ -211,6 +285,14 @@ export class DocQuery {
         return this;
     }
     /**
+     * Transform each element in the current selection and return the new selection.
+     * @param cb transformer to apply
+     * @returns new selection of transformed elements
+     */
+    map(cb) {
+        return new DocQuery(...this.elements.map(cb));
+    }
+    /**
      * Attach every element in the current selection to the given parent element.
      * @param parent parent element to attach to
      * @returns this selection
@@ -231,10 +313,13 @@ export class DocQuery {
      */
     attach(...children) {
         if (this.elements.length === 0) {
-            children.forEach(child => child.parentElement.removeChild(child));
+            children.forEach(child => {
+                if (typeof child === 'object')
+                    child.parentElement.removeChild(child);
+            });
         }
         else {
-            children.forEach(child => this.elements[0].appendChild(child));
+            children.forEach(child => this.elements[0].appendChild(typeof child === 'string' ? document.createTextNode(child) : child));
         }
         return this;
     }
@@ -249,6 +334,20 @@ export class DocQuery {
             el.parentElement.removeChild(el);
         }
         return this;
+    }
+    /**
+     * Gets the parent element of every element in the current selection.
+     * If multiple elements share a parent, that parent is added only once.
+     * @returns new selection of parent elements
+     */
+    parent() {
+        const parents = [];
+        for (let elem of this.elements) {
+            if (parents.indexOf(elem.parentElement) === -1) {
+                parents.push(elem.parentElement);
+            }
+        }
+        return new DocQuery(...parents);
     }
     /**
      * Detach all children from the elements of the current selection.

@@ -234,6 +234,72 @@ export class DocQuery {
         }
     }
     
+    /**
+     * Get the absolute location on the page of each element in the current selection.
+     * @returns Array of 2-tuples [[x, y]]
+     */
+    location(): [number, number][] {
+        return this.elements.map(this._elementLocation.bind(this));
+    }
+    private _elementLocation(el): [number, number] {
+        const result: [number, number] = [0, 0];
+        while (el) {
+            result[0] += el.offsetLeft;
+            result[1] += el.offsetTop;
+            el = el.offsetParent;
+        }
+        return result;
+    }
+    
+    /**
+     * Get the absolute size of each element in the current selection.
+     * @returns Array of 2-tuples [[x, y]]
+     */
+    size(): [number, number][] {
+        return this.elements.map(el => [el.offsetWidth, el.offsetHeight]);
+    }
+    
+    /**
+     * Get the offsets of each element relative to their individual offset parents.
+     * The offset parent is the first ancestor element with CSS display set to anything but 'static'. In other words,
+     * it's the element considered as the anchor point by CSS.
+     * 
+     * `right` and `bottom` are regular distances, i.e. distance from anchor parent's left border to element's right
+     * border respectively.
+     * 
+     * @returns Array of 4-tuples [[left, top, right, bottom]]
+     */
+    box({absolute}: {absolute?: boolean}): [number, number, number, number][] {
+        return this.elements.map(el => {
+            const [x, y] = absolute ? this._elementLocation(el) : [el.offsetLeft, el.offsetTop];
+            const [w, h] = [el.offsetWidth, el.offsetHeight];
+            return [x, y, x+w, y+h];
+        });
+    }
+    
+    /**
+     * Get the offsets of each element relative to their individual offset parents as CSS-compatible objects array.
+     * 
+     * Unlike {@see box}, `right` and `bottom` properties are reversed distances, i.e. distance from anchor parent's
+     * right border to element's own right border respectively.
+     * 
+     * @returns Array of CSS location objects [{top, left, right, bottom}]
+     */
+    cssBox(): {top: number, left: number, right: number, bottom: number}[] {
+        return this.elements.map(el => {
+            const parent = (el.offsetParent as HTMLElement) ?? document.body;
+            const [pw, ph] = [parent.offsetWidth, parent.offsetHeight];
+            const [x, y] = [el.offsetLeft, el.offsetTop];
+            const [w, h] = [el.offsetWidth, el.offsetHeight];
+            return {
+                top: y,
+                left: x,
+                right: pw-(x+w),
+                bottom: ph-(y+h),
+            };
+        });
+    }
+    
     private _style_get(name: string) {
         return this.elements.map(e => getComputedStyle(e)[name]);
     }
