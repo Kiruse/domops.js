@@ -33,6 +33,15 @@ $.hash = function(): string {
     return hash.startsWith('#') ? hash.substr(1) : hash;
 }
 $.target = () => new DocQuery('#' + $.hash());
+/**
+ * async/await enabled `setTimeout` for convenience.
+ * @param timeout in seconds to delay the async operation by.
+ * @returns the actually passed time - will be negligibly close to requested timeout
+ */
+$.delay = (timeout: number) => new Promise((resolve) => {
+    const t1 = Date.now();
+    setTimeout(() => resolve(Date.now()-t1), timeout);
+});
 
 export class ArgumentError extends Error {}
 
