@@ -252,6 +252,13 @@ export class DocQuery {
         }
     }
     
+    show(display: string = 'initial'): this {
+        return this.style({display});
+    }
+    hide(display: string = 'none'): this {
+        return this.style({display});
+    }
+    
     /**
      * Get the absolute location on the page of each element in the current selection.
      * @returns Array of 2-tuples [[x, y]]
