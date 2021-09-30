@@ -28,6 +28,9 @@ $.onready = function(cb: () => void) {
     }
 }
 
+$.onhash = function(callback: () => void) {
+    globalThis.addEventListener('hashchange', callback);
+}
 $.hash = function(): string {
     const hash = location.hash;
     return hash.startsWith('#') ? hash.substr(1) : hash;
