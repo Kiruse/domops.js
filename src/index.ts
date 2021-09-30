@@ -362,6 +362,15 @@ export class DocQuery {
     }
     
     /**
+     * Filter elements from the current selection for which the given predicate returns true.
+     * @param predicate by which to filter selection.
+     * @returns new selection containing filtered elements.
+     */
+    filter(predicate: (el: HTMLElement, idx: number, ary: HTMLElement[]) => boolean): DocQuery {
+        return new DocQuery(...this.elements.filter(predicate));
+    }
+    
+    /**
      * Transform each element in the current selection and return the new selection.
      * @param cb transformer to apply
      * @returns new selection of transformed elements
