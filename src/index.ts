@@ -28,6 +28,12 @@ $.onready = function(cb: () => void) {
     }
 }
 
+$.hash = function(): string {
+    const hash = location.hash;
+    return hash.startsWith('#') ? hash.substr(1) : hash;
+}
+$.target = () => new DocQuery('#' + $.hash());
+
 export class ArgumentError extends Error {}
 
 interface DOMEventHandler {
