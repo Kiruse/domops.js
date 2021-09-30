@@ -126,9 +126,9 @@ export class DocQuery {
     }
     
     attr(name: string): string[];
-    attr(name: string, value: any): DocQuery;
-    attr(props: Object): DocQuery;
-    attr(...args): string[]|DocQuery {
+    attr(name: string, value: any): this;
+    attr(props: Object): this;
+    attr(...args): string[]|this {
         if (args.length === 0) throw new ArgumentError('no arguments');
         if (args.length === 1) {
             if (typeof(args[0]) === 'object')
@@ -158,9 +158,9 @@ export class DocQuery {
     }
     
     data(name: string): string[];
-    data(name: string, value: string): DocQuery;
-    data(props: Object): DocQuery;
-    data(...args): string[]|DocQuery {
+    data(name: string, value: string): this;
+    data(props: Object): this;
+    data(...args): string[]|this {
         if (args.length === 0) throw new ArgumentError('no arguments');
         if (args.length === 1) {
             if (typeof(args[0]) === 'object')
@@ -183,9 +183,9 @@ export class DocQuery {
     }
     
     text(): string[];
-    text(value: string): DocQuery;
-    text(cb: (el: HTMLElement, i: number, ary: HTMLElement[]) => string): DocQuery;
-    text(arg?: any): string[]|DocQuery {
+    text(value: string): this;
+    text(cb: (el: HTMLElement, i: number, ary: HTMLElement[]) => string): this;
+    text(arg?: any): string[]|this {
         if (arg === undefined) {
             return this.elements.map(e => e.innerText);
         }
@@ -202,9 +202,9 @@ export class DocQuery {
     }
     
     html(): string[];
-    html(value: string): DocQuery;
-    html(cb: (el: HTMLElement, i: number, ary: HTMLElement[]) => string): DocQuery;
-    html(arg?): string[]|DocQuery {
+    html(value: string): this;
+    html(cb: (el: HTMLElement, i: number, ary: HTMLElement[]) => string): this;
+    html(arg?): string[]|this {
         if (arg === undefined) {
             return this.elements.map(e => e.innerHTML);
         }
@@ -221,9 +221,9 @@ export class DocQuery {
     }
     
     value(): string[];
-    value(val: string): DocQuery;
-    value(cb: (el: HTMLElement, i: number, ary: HTMLElement[]) => string): DocQuery;
-    value(val?): string[]|DocQuery {
+    value(val: string): this;
+    value(cb: (el: HTMLElement, i: number, ary: HTMLElement[]) => string): this;
+    value(val?): string[]|this {
         if (val === undefined) {
             return this.elements.map(el => (el as HTMLInputElement).value);
         }
@@ -237,9 +237,9 @@ export class DocQuery {
     }
     
     style(name: string): string[];
-    style(name: string, value: any): DocQuery;
-    style(styles: Object): DocQuery;
-    style(...args): string[]|DocQuery {
+    style(name: string, value: any): this;
+    style(styles: Object): this;
+    style(...args): string[]|this {
         if (args.length === 0) throw new ArgumentError('no arguments');
         if (args.length === 1) {
             if (typeof(args[0]) === 'object')
@@ -334,11 +334,11 @@ export class DocQuery {
         return this;
     }
     
-    addClass(...classes: string[]): DocQuery {
+    addClass(...classes: string[]): this {
         this.elements.forEach(e => e.classList.add(...classes));
         return this;
     }
-    removeClass(...classes: string[]): DocQuery {
+    removeClass(...classes: string[]): this {
         this.elements.forEach(e => e.classList.remove(...classes));
         return this;
     }
@@ -346,7 +346,7 @@ export class DocQuery {
         return this.elements.map(e => e.classList.contains(cls));
     }
     
-    on(evt: string, handler: DOMEventHandler): DocQuery {
+    on(evt: string, handler: DOMEventHandler): this {
         const events = evt.split(/\s+/);
         for (let elem of this.elements) {
             for (let event of events) {
@@ -356,7 +356,7 @@ export class DocQuery {
         return this;
     }
     
-    forEach(cb: (el: HTMLElement, idx: number, ary: HTMLElement[]) => void): DocQuery {
+    forEach(cb: (el: HTMLElement, idx: number, ary: HTMLElement[]) => void): this {
         this.elements.forEach(cb);
         return this;
     }
@@ -375,7 +375,7 @@ export class DocQuery {
      * @param parent parent element to attach to
      * @returns this selection
      */
-    attachTo(parent: HTMLElement): DocQuery {
+    attachTo(parent: HTMLElement): this {
         if (parent instanceof DocQuery) {
             parent = parent[0];
         }
@@ -390,7 +390,7 @@ export class DocQuery {
      * @param children to attach
      * @return this selection
      */
-    attach(...children: (HTMLElement|string)[]): DocQuery {
+    attach(...children: (HTMLElement|string)[]): this {
         if (this.elements.length === 0) {
             children.forEach(child => {
                 if (typeof child === 'object')
@@ -409,7 +409,7 @@ export class DocQuery {
      * @see attach, attachTo
      * @returns this selection
      */
-    detach(): DocQuery {
+    detach(): this {
         for (let el of this.elements) {
             el.parentElement.removeChild(el);
         }
@@ -435,7 +435,7 @@ export class DocQuery {
      * Detach all children from the elements of the current selection.
      * @returns this selection
      */
-    empty(): DocQuery {
+    empty(): this {
         for (let el of this.elements) {
             for (let child of el.children) {
                 el.removeChild(child);
