@@ -1,6 +1,6 @@
 {
   "name": "@kiruse/domops",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A minimalist's interpretation of jQuery for DOM traversal & manipulation only.",
   "main": "./src/index.js",
   "scripts": {
