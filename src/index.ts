@@ -14,6 +14,24 @@ export default function $(...args) { return new (DocQuery as DocQueryConstructor
 
 let docready = false;
 
+const styleUnitMappings = createStyleUnitMappings();
+function createStyleUnitMappings() {
+    const result = {};
+    function addUnitMapping(unit: string | ((val: number) => string), ...props: string[]) {
+        for (let prop in props) {
+            result[prop] = unit;
+            result[toCamelCase(prop)] = unit;
+        }
+    }
+    
+    addUnitMapping('px', 'top', 'left', 'right', 'bottom');
+    addUnitMapping('px', 'margin', 'margin-top', 'margin-left', 'margin-right', 'margin-bottom');
+    addUnitMapping('px', 'padding', 'padding-top', 'padding-left', 'padding-right', 'padding-bottom');
+    addUnitMapping(val => val < 8 ? 'em' : 'px', 'font-size');
+    
+    return result;
+}
+
 $.create = function(tag: string) {
     return new DocQuery(document.createElement(tag));
 }
@@ -252,6 +270,25 @@ export class DocQuery {
         }
     }
     
+    private _style_get(name: string) {
+        return this.elements.map(e => getComputedStyle(e)[name]);
+    }
+    private _style_set(name: string, value: any) {
+        if (name in styleUnitMappings && typeof(value) === 'number') {
+            value = value + styleUnitMappings[name];
+        }
+        this.elements.forEach((e: any) => e.style[name] = value);
+        return this;
+    }
+    private _style_obj(props: Object) {
+        for (let prop in props) {
+            if (props.hasOwnProperty(prop)) {
+                this._style_set(prop, props[prop]);
+            }
+        }
+        return this;
+    }
+    
     show(display: string = 'initial'): this {
         return this.style({display});
     }
@@ -323,22 +360,6 @@ export class DocQuery {
                 bottom: ph-(y+h),
             };
         });
-    }
-    
-    private _style_get(name: string) {
-        return this.elements.map(e => getComputedStyle(e)[name]);
-    }
-    private _style_set(name: string, value: any) {
-        this.elements.forEach((e: any) => e.style[name] = value); // for some reason TypeScript is unaware of style property
-        return this;
-    }
-    private _style_obj(props: Object) {
-        for (let prop in props) {
-            if (props.hasOwnProperty(prop)) {
-                this._style_set(prop, props[prop]);
-            }
-        }
-        return this;
     }
     
     addClass(...classes: string[]): this {
@@ -480,4 +501,5 @@ function unique(arr: any[]) {
     return arr;
 }
 
+const toCamelCase = (s: string) => s.replace(/-(.)/g, (_, c: string) => c.toUpperCase());
 const ensureArray = x => Array.isArray(x) ? x : [x];
