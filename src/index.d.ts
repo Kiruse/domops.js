@@ -6,6 +6,10 @@ declare function $(elements: HTMLElement[]): DocQuery;
 declare namespace $ {
     var create: (tag: string) => DocQuery;
     var onready: (cb: () => void) => void;
+    var onhash: (callback: () => void) => void;
+    var hash: () => string;
+    var target: () => DocQuery;
+    var delay: (timeout: number) => Promise<unknown>;
 }
 export default $;
 export declare class ArgumentError extends Error {
@@ -42,27 +46,29 @@ export declare class DocQuery {
      */
     nth(n: number): DocQuery;
     attr(name: string): string[];
-    attr(name: string, value: any): DocQuery;
-    attr(props: Object): DocQuery;
+    attr(name: string, value: any): this;
+    attr(props: Object): this;
     private _attr_get;
     private _attr_set;
     private _attr_obj;
     data(name: string): string[];
-    data(name: string, value: string): DocQuery;
-    data(props: Object): DocQuery;
+    data(name: string, value: string): this;
+    data(props: Object): this;
     private _data_obj;
     text(): string[];
-    text(value: string): DocQuery;
-    text(cb: (el: HTMLElement, i: number, ary: HTMLElement[]) => string): DocQuery;
+    text(value: string): this;
+    text(cb: (el: HTMLElement, i: number, ary: HTMLElement[]) => string): this;
     html(): string[];
-    html(value: string): DocQuery;
-    html(cb: (el: HTMLElement, i: number, ary: HTMLElement[]) => string): DocQuery;
+    html(value: string): this;
+    html(cb: (el: HTMLElement, i: number, ary: HTMLElement[]) => string): this;
     value(): string[];
-    value(val: string): DocQuery;
-    value(cb: (el: HTMLElement, i: number, ary: HTMLElement[]) => string): DocQuery;
+    value(val: string): this;
+    value(cb: (el: HTMLElement, i: number, ary: HTMLElement[]) => string): this;
     style(name: string): string[];
-    style(name: string, value: any): DocQuery;
-    style(styles: Object): DocQuery;
+    style(name: string, value: any): this;
+    style(styles: Object): this;
+    show(display?: string): this;
+    hide(display?: string): this;
     /**
      * Get the absolute location on the page of each element in the current selection.
      * @returns Array of 2-tuples [[x, y]]
@@ -104,11 +110,17 @@ export declare class DocQuery {
     private _style_get;
     private _style_set;
     private _style_obj;
-    addClass(...classes: string[]): DocQuery;
-    removeClass(...classes: string[]): DocQuery;
+    addClass(...classes: string[]): this;
+    removeClass(...classes: string[]): this;
     hasClass(cls: string): boolean[];
-    on(evt: string, handler: DOMEventHandler): DocQuery;
-    forEach(cb: (el: HTMLElement, idx: number, ary: HTMLElement[]) => void): DocQuery;
+    on(evt: string, handler: DOMEventHandler): this;
+    forEach(cb: (el: HTMLElement, idx: number, ary: HTMLElement[]) => void): this;
+    /**
+     * Filter elements from the current selection for which the given predicate returns true.
+     * @param predicate by which to filter selection.
+     * @returns new selection containing filtered elements.
+     */
+    filter(predicate: (el: HTMLElement, idx: number, ary: HTMLElement[]) => boolean): DocQuery;
     /**
      * Transform each element in the current selection and return the new selection.
      * @param cb transformer to apply
@@ -120,7 +132,7 @@ export declare class DocQuery {
      * @param parent parent element to attach to
      * @returns this selection
      */
-    attachTo(parent: HTMLElement): DocQuery;
+    attachTo(parent: HTMLElement): this;
     /**
      * Attach given children to the current selection's first element.
      * @note elements can only be parented to at most one element, thus attaching to all elements in the selection is impossible.
@@ -128,14 +140,14 @@ export declare class DocQuery {
      * @param children to attach
      * @return this selection
      */
-    attach(...children: (HTMLElement | string)[]): DocQuery;
+    attach(...children: (HTMLElement | string)[]): this;
     /**
      * Detach the current selection from their parent elements.
      * @note The elements in this selection will be effectively removed from the DOM until reattached.
      * @see attach, attachTo
      * @returns this selection
      */
-    detach(): DocQuery;
+    detach(): this;
     /**
      * Gets the parent element of every element in the current selection.
      * If multiple elements share a parent, that parent is added only once.
@@ -146,6 +158,6 @@ export declare class DocQuery {
      * Detach all children from the elements of the current selection.
      * @returns this selection
      */
-    empty(): DocQuery;
+    empty(): this;
     static _query(selector: string, relative: Relative[]): HTMLElement[];
 }

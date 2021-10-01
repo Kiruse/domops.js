@@ -20,6 +20,23 @@ $.onready = function (cb) {
         document.addEventListener('DOMContentLoaded', cb);
     }
 };
+$.onhash = function (callback) {
+    globalThis.addEventListener('hashchange', callback);
+};
+$.hash = function () {
+    const hash = location.hash;
+    return hash.startsWith('#') ? hash.substr(1) : hash;
+};
+$.target = () => new DocQuery('#' + $.hash());
+/**
+ * async/await enabled `setTimeout` for convenience.
+ * @param timeout in seconds to delay the async operation by.
+ * @returns the actually passed time - will be negligibly close to requested timeout
+ */
+$.delay = (timeout) => new Promise((resolve) => {
+    const t1 = Date.now();
+    setTimeout(() => resolve(Date.now() - t1), timeout);
+});
 class ArgumentError extends Error {
 }
 exports.ArgumentError = ArgumentError;
@@ -187,6 +204,12 @@ class DocQuery {
             return this._style_set(args[0], args[1]);
         }
     }
+    show(display = 'initial') {
+        return this.style({ display });
+    }
+    hide(display = 'none') {
+        return this.style({ display });
+    }
     /**
      * Get the absolute location on the page of each element in the current selection.
      * @returns Array of 2-tuples [[x, y]]
@@ -287,6 +310,14 @@ class DocQuery {
     forEach(cb) {
         this.elements.forEach(cb);
         return this;
+    }
+    /**
+     * Filter elements from the current selection for which the given predicate returns true.
+     * @param predicate by which to filter selection.
+     * @returns new selection containing filtered elements.
+     */
+    filter(predicate) {
+        return new DocQuery(...this.elements.filter(predicate));
     }
     /**
      * Transform each element in the current selection and return the new selection.
